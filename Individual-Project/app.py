@@ -35,7 +35,7 @@ def Index():
         survey = {"survey":{"animal":animal,"topic":topic,"sport":sport,"food":food,"brand":brand,"gum":gum,"country":country}}
         db.child("Users").child(login_session['user']['localId']).update(survey)
 
-        dictionary={"staff":{"Jihad":['2','1','1','2','3','2','3'] , "George":['2','1','2','1','3','1','3'] , "Kenda":['2','1','1','1','2','1','3'] , "Jameel":['1','1','1','2','3','2','2'] , "Ava":['2','1','1','1','2','1','3'] , "Ali":['2','1','1','1','2','1','3'] , "Fouad":['2','1','1','1','2','1','3']}}
+        dictionary={"staff":{"Jihad":['2','1','1','2','3','2','3'] , "George":['2','1','2','1','3','1','3'] , "Kenda":['2','1','3','1','2','1','3'] , "Jameel":['1','1','1','2','3','2','2'] , "Ava":['2','1','1','1','2','1','3'] , "Ali":['2','1','1','1','2','3','3'] , "Fouad":['2','2','2','1','2','1','3']}}
         my_survey = [animal, topic, sport, food, brand, gum, country]
         list1=list(dictionary['staff'].keys())
         instructor_to_score = {}
