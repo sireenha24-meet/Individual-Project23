@@ -24,6 +24,7 @@ app.config['SECRET_KEY'] = 'super-secret-key'
 @app.route('/index',methods=['GET', 'POST'])
 def Index():
     if request.method=='POST':
+        print("POSTED")
         animal=request.form['animal']
         topic=request.form['topic']
         sport=request.form['sport']
@@ -33,6 +34,29 @@ def Index():
         country=request.form['country']
         survey = {"survey":{"animal":animal,"topic":topic,"sport":sport,"food":food,"brand":brand,"gum":gum,"country":country}}
         db.child("Users").child(login_session['user']['localId']).update(survey)
+
+        dictionary={"staff":{"Jihad":['2','1','1','2','3','2','3'] , "George":['2','1','2','1','3','1','3'] , "Kenda":['2','1','1','1','2','1','3'] , "Jameel":['1','1','1','2','3','2','2'] , "Ava":['2','1','1','1','2','1','3'] , "Ali":['2','1','1','1','2','1','3'] , "Fouad":['2','1','1','1','2','1','3']}}
+        my_survey = [animal, topic, sport, food, brand, gum, country]
+        list1=list(dictionary['staff'].keys())
+        instructor_to_score = {}
+        def result():
+            max_count = 0 
+            similar_instructor = ""
+            for i in range(len(list1)):
+                count = 0
+                instructor = list1[i]
+                for index in range(len(my_survey)):
+                    if my_survey[index] == dictionary['staff'][instructor][index]:
+                     count += 1
+
+                if count > max_count:
+                    max_count = count
+                    similar_instructor = instructor
+                instructor_to_score[instructor]=count
+
+            return similar_instructor
+        result = result()
+        return render_template("results.html", result=result)
     return render_template('index.html')
 
 
@@ -46,7 +70,8 @@ def signin():
         try:
             login_session['user'] = auth.sign_in_with_email_and_password(email, password)
             return redirect(url_for('Index'))
-        except:
+        except Exception as e:
+            print(e)
             error = "Authentication failed"
     return render_template("signin.html")
 
@@ -61,12 +86,13 @@ def signup():
         #username = request.form['username'] 
 
         try:
-            user={"name":full_name, "email":email}
+            user={ "email":email}
             login_session['user'] = auth.create_user_with_email_and_password(email, password)
             UID=login_session['user']['localId']
             db.child("Users").child(UID).set(user)
             return redirect(url_for('Index'))
-        except:
+        except Exception as e:
+            print(e)
             error = "Authentication failed"
     return render_template("signup.html")
 
@@ -80,41 +106,6 @@ def signout():
 @app.route('/results')
 def results():
     return render_template("results.html")
-
-
-#dictionary={"staff":{"Jihad":['2','1','1','2','3','2','3'] , "George":['2','1','2','1','3','1','3'] , "Kenda":[] , "Jameel":['1','1','1','2','3','2','2'] , "Ava":['2','1','1','1','2','1','3'] , "Ali":[] , "Fouad":[]}}
-#c=0
-#c1=0
-#c2=0
-#animal=request.form['animal']
-#topic=request.form['topic']
-#sport=request.form['sport']
-#food=request.form['food']
-#brand=request.form['brand']
-#gum=request.form['gum']
-#country=request.form['country']
-#survey = {"survey":{"animal":animal,"topic":topic,"sport":sport,"food":food,"brand":brand,"gum":gum,"country":country}}
-#list=['JIHAD','GEORGE','KENDA','JAMEEL','AVA','ALI','FOUAD']
-#def Result():
-   #for i in range(7):
-        #for j in range(7):
-            #if dictionary['staff'][i][j]==survey['survey'][j]:
-                #c++
-
-        #for l in range(7):
-            #if dictionary['staff'][l].append(c)
-
-    #for n in range(7):
-        #if dictionary['staff'][n][7]>c1:
-            #c2=n
-            #c1=dictionray['staff'][n][7]
-
-
-    #return return render_template("results.html",'You're most similar to 'list[c2])      
-
-                
-
-
 
 
 
